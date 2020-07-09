@@ -25,22 +25,18 @@ class UserSerializer(serializers.Serializer):
     name = serializers.CharField()
     # 此处age字段的required参数默认为True
     age = serializers.IntegerField(required=False)
+    addr = serializers.CharField(default='默认地址')
+
 
 
 if __name__ == '__main__':
 
     # 准备数据：此数据在实际中经常是客户端传递的，此处只是模拟
 
-    # 准备数据
-    data = {'name': '张云龙'}
+    # 为user对象传值
+    user = User('张云龙',18)
 
-    # 数据校验
-    serializer = UserSerializer(data=data)
-    res = serializer.is_valid()
+    # 将对象传入，进行序列化
+    serializer = UserSerializer(user)
 
-    if res:
-        # 获取校验通过之后的数据
-        print('校验通过：', serializer.validated_data)
-    else:
-        # 获取校验失败之后的错误提示信息
-        print('校验失败：', serializer.errors)
+    print(serializer.data)
