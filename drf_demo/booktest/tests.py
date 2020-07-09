@@ -6,6 +6,7 @@ if not os.environ.get('DJANGO_SETTINGS_MODULE'):
 
 # 让Django进行一次初始化
 import django
+
 django.setup()
 
 from rest_framework import serializers
@@ -13,7 +14,8 @@ from rest_framework import serializers
 
 class User(object):
     '''用户类'''
-    def __init__(self,name,age):
+
+    def __init__(self, name, age):
         self.name = name
         self.age = age
 
@@ -24,30 +26,21 @@ class UserSerializer(serializers.Serializer):
     age = serializers.ImageField()
 
 
-
 if __name__ == '__main__':
 
-    '''创建user对象'''
-    user = User(name="张云龙",age=18)
+    # 准备数据：此数据在实际中经常是客户端传递的，此处只是模拟
 
+    data = {'name': '张云龙', 'age': 30}
 
-    # 创建序列化器对象，传入被序列化的user对象
-    # serializer = UserSerializer(instance=user)
+    # 创建序列化器对象，传入待校验的数据
+    serializer = UserSerializer(data=data)
 
-    serializer = UserSerializer(user)
+    # 调用is_valid进行数据校验，成功返回True，失败返回False
+    res = serializer.is_valid()
 
-    # 获取序列化之后的数据
-
-    res = serializer.data
-    print(res)
-
-
-
-
-
-
-
-
-
-
-
+    if res:
+        # 校验通过，获取校验之后的数据
+        print("校验通过", serializer.validated_data)
+    else:
+        # 校验失败，获取错误提示信息
+        print('校验失败：', serializer.errors)
