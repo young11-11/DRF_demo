@@ -23,24 +23,16 @@ class User(object):
 class UserSerializer(serializers.Serializer):
     '''用户序列化器类'''
     name = serializers.CharField()
-    age = serializers.ImageField(read_only=True)
+    age = serializers.ImageField(write_only=True)
 
 
 if __name__ == '__main__':
 
     # 准备数据：此数据在实际中经常是客户端传递的，此处只是模拟
 
-    data = {'name': '张云龙', 'age': 18}
+    user = User('张云龙',18)
 
-    # 创建序列化器对象，传入待校验的数据
-    serializer = UserSerializer(data=data)
+    # 将user对象序列化为字典{'name': '张云龙', 'age': 18}
+    serializer = UserSerializer(user)
 
-    # 调用is_valid进行数据校验，成功返回True，失败返回False
-    res = serializer.is_valid()
-
-    if res:
-        # 校验通过，获取校验之后的数据
-        print("校验通过", serializer.validated_data)
-    else:
-        # 校验失败，获取错误提示信息
-        print('校验失败：', serializer.errors)
+    print(serializer.data)
