@@ -23,14 +23,14 @@ class User(object):
 class UserSerializer(serializers.Serializer):
     '''用户序列化器类'''
     name = serializers.CharField()
-    age = serializers.ImageField()
+    age = serializers.ImageField(read_only=True)
 
 
 if __name__ == '__main__':
 
     # 准备数据：此数据在实际中经常是客户端传递的，此处只是模拟
 
-    data = {'name': '张云龙', 'age': 30}
+    data = {'name': '张云龙', 'age': 18}
 
     # 创建序列化器对象，传入待校验的数据
     serializer = UserSerializer(data=data)
