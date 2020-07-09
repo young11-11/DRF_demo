@@ -24,7 +24,7 @@ class UserSerializer(serializers.Serializer):
     '''用户序列化器类'''
     name = serializers.CharField()
     # 此处age字段的required参数默认为True
-    age = serializers.IntegerField()
+    age = serializers.IntegerField(required=False)
 
 
 if __name__ == '__main__':
