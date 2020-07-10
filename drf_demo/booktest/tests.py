@@ -1,6 +1,7 @@
 # 设置Django运行所依赖的环境变量
 import os
 
+
 if not os.environ.get('DJANGO_SETTINGS_MODULE'):
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'drf_demo.settings')
 
@@ -9,6 +10,8 @@ import django
 
 django.setup()
 
+from booktest.models import BookInfo
+from booktest.serializers import BookInfoSerializer
 from rest_framework import serializers
 
 
@@ -30,16 +33,13 @@ class UserSerializer(serializers.Serializer):
 
 if __name__ == '__main__':
 
-    # 准备数据
-    data = {'name': '张云龙'}
+    # 查询获取图书对象
+    book = BookInfo.objects.get(id=1)
 
-    # 数据校验
-    serializer = UserSerializer(data=data)
-    res = serializer.is_valid()
+    # 创建序列化对象
+    serializer = BookInfoSerializer(book)
 
-    if res:
-        # 获取校验通过之后的数据
-        print('校验通过：', serializer.validated_data)
-    else:
-        # 获取校验失败之后的错误提示信息
-        print('校验失败：', serializer.errors)
+    # 获取序列化之后的数据
+    res = serializer.data
+
+    print(res)
