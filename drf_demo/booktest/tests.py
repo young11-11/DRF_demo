@@ -32,10 +32,10 @@ class UserSerializer(serializers.Serializer):
 
 if __name__ == '__main__':
     # 查询获取图书对象
-    book = BookInfo.objects.get(id=1)
+    books = BookInfo.objects.all()
 
     # 创建序列化对象
-    serializer = BookInfoSerializer(book)
+    serializer = BookInfoSerializer(books,many=True)
 
     # 获取序列化之后的数据
     res = serializer.data
