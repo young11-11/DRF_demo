@@ -2,19 +2,21 @@ import json
 
 from django.http import JsonResponse, HttpResponse
 from django.views import View
+from rest_framework import status
+from rest_framework.views import APIView
 
 from booktest.models import BookInfo
 from booktest.serializers import BookInfoSerializer
 
 
-class BookListView(View):
-    '''获取'''
+class BookListView(APIView):
+    '''获取所有图书，增加图书'''
 
     def get(self, request):
         # 1.获取所有图书
         books = BookInfo.objects.all()
 
-        # 整理格式
+        # 序列化所有数据
         serializer = BookInfoSerializer(books,many=True)
 
         # 返回
@@ -22,11 +24,9 @@ class BookListView(View):
 
     def post(self, request):
         '''增加'''
-        # 接收参数 dict格式
-        json_dict = json.loads(request.body.decode())
 
         # 反序列化
-        serializer = BookInfoSerializer(data=json_dict)
+        serializer = BookInfoSerializer(data=request.data)
 
         # 校验参数
         serializer.is_valid(raise_exception=True)
@@ -35,7 +35,7 @@ class BookListView(View):
         serializer.save()
 
         # 返回
-        return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class BookDetailView(View):
@@ -62,10 +62,8 @@ class BookDetailView(View):
         except Exception as e:
             return JsonResponse({'detail': 'not found'}, status=404)
 
-        # 得到数据后修改数据
-        json_dict = json.loads(request.body.decode())
 
-        serializer = BookInfoSerializer(data=json_dict)
+        serializer = BookInfoSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         # 反序列化-数据保存
