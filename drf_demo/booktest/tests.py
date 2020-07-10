@@ -10,8 +10,8 @@ import django
 
 django.setup()
 
-from booktest.models import BookInfo
-from booktest.serializers import BookInfoSerializer
+from booktest.models import BookInfo, HeroInfo
+from booktest.serializers import BookInfoSerializer, HeroInfoSerializer
 from rest_framework import serializers
 
 
@@ -32,10 +32,10 @@ class UserSerializer(serializers.Serializer):
 
 if __name__ == '__main__':
     # 查询获取图书对象
-    books = BookInfo.objects.all()
+    hero = HeroInfo.objects.get(id=6)
 
     # 创建序列化对象
-    serializer = BookInfoSerializer(books,many=True)
+    serializer = HeroInfoSerializer(hero)
 
     # 获取序列化之后的数据
     res = serializer.data
