@@ -32,7 +32,8 @@ class UserSerializer(serializers.Serializer):
 
 if __name__ == '__main__':
 
-    data = {"btitle": "python", "bpub_date": "2019-01-29"}
+    # data = {"btitle": "python", "bpub_date": "2019-01-29"}
+    data = {"btitle": "python", "bpub_date": 123}
 
     serializer = BookInfoSerializer(data=data)
 
