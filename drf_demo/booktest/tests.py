@@ -1,6 +1,6 @@
 # 设置Django运行所依赖的环境变量
+import json
 import os
-
 
 if not os.environ.get('DJANGO_SETTINGS_MODULE'):
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'drf_demo.settings')
@@ -30,9 +30,7 @@ class UserSerializer(serializers.Serializer):
     age = serializers.IntegerField(default=20)
 
 
-
 if __name__ == '__main__':
-
     # 查询获取图书对象
     book = BookInfo.objects.get(id=1)
 
@@ -42,4 +40,6 @@ if __name__ == '__main__':
     # 获取序列化之后的数据
     res = serializer.data
 
+    # 数据格式化显示
+    res = json.dumps(res, indent=1, ensure_ascii=False)
     print(res)
