@@ -1,17 +1,10 @@
 from rest_framework import serializers
 
 
-def about_django(value):
-    if 'django' not in value.lower():
-        raise serializers.ValidationError("图书不是关于Django的")
-
-    return value
-
-
 class BookInfoSerializer(serializers.Serializer):
     """图书序列化器类"""
     id = serializers.IntegerField(label='ID', read_only=True)
-    btitle = serializers.CharField(label='名称', max_length=20,validators=[about_django])
+    btitle = serializers.CharField(label='名称', max_length=20)
     bpub_date = serializers.DateField(label='发布日期')
     bread = serializers.IntegerField(label='阅读量', required=False)
     bcomment = serializers.IntegerField(label='评论量', required=False)
@@ -19,6 +12,15 @@ class BookInfoSerializer(serializers.Serializer):
     # heroinfo_set = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     # heroinfo_set = serializers.StringRelatedField(label='英雄', many=True)
     # heroinfo_set = HeroInfoSerializer(label='英雄', many=True)
+
+    def validate_btitle(self, value):
+        """此方法针对btitle字段的内容进行补充验证"""
+
+        if 'django' not in value.lower():
+            raise serializers.ValidationError("图书不是关于Django的-2")
+
+            # 注意：必须返回值！！！
+        return value
 
 
 class HeroInfoSerializer(serializers.Serializer):
