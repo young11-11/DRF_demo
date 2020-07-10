@@ -31,24 +31,33 @@ class UserSerializer(serializers.Serializer):
 
 
 if __name__ == '__main__':
+    # 获取一本书
+    book = BookInfo.objects.get(id=9)
 
-    data = {"btitle": "python", "bpub_date": "2019-01-29"}
+    # 准备数据
+    req_data = {'btitle': 'django_rest', 'bpub_date': '2019-06-01', 'bread': 21, 'bcomment': 20}
 
-    serializer = BookInfoSerializer(data=data)
+    # 创建序列化器对象
+    serializer = BookInfoSerializer(book,data=req_data)
 
-    res = serializer.is_valid()
+    # 数据校验
+    serializer.is_valid()
 
-    if res:
-        print(serializer.validated_data)
-    else:
-        print(serializer.errors)
+    # 数据保存：此处save会调用序列化器类中的create方法
+    serializer.save()
+
+    # 获取create方法返回的对象序列化之后的数据
+    res = serializer.data
+    res = json.dumps(res, indent=1, ensure_ascii=False)
+    print(res)
+
 
 
     # # 查询获取图书对象
-    # book = BookInfo.objects.get(id=2)
+    # book = BookInfo.objects.all()
     #
     # # 创建序列化对象
-    # serializer = BookInfoSerializer(book)
+    # serializer = BookInfoSerializer(book,many=True)
     #
     # # 获取序列化之后的数据
     # res = serializer.data
