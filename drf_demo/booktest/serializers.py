@@ -8,6 +8,10 @@ class BookInfoSerializer(serializers.Serializer):
     bpub_date = serializers.DateField(label='发布日期')
     bread = serializers.IntegerField(label='阅读量', required=False)
     bcomment = serializers.IntegerField(label='评论量', required=False)
+    # 关联对象嵌套序列化字段
+    # heroinfo_set = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
+    heroinfo_set = serializers.StringRelatedField(label='英雄', many=True)
+    # heroinfo_set = HeroInfoSerializer(label='英雄', many=True)
 
 
 class HeroInfoSerializer(serializers.Serializer):
