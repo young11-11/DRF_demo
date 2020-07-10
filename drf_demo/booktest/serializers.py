@@ -1,3 +1,4 @@
+from IPython.utils.coloransi import value
 from rest_framework import serializers
 
 
@@ -13,14 +14,14 @@ class BookInfoSerializer(serializers.Serializer):
     # heroinfo_set = serializers.StringRelatedField(label='英雄', many=True)
     # heroinfo_set = HeroInfoSerializer(label='英雄', many=True)
 
-    def validate_btitle(self, value):
-        """此方法针对btitle字段的内容进行补充验证"""
+    def validate(self, attrs):
+        btitle = attrs.get('btitle')
 
         if 'django' not in value.lower():
-            raise serializers.ValidationError("图书不是关于Django的-2")
+            raise serializers.ValidationError("图书不是关于Django的-3")
 
-            # 注意：必须返回值！！！
-        return value
+        # 注意：必须返回值！！！
+        return attrs
 
 
 class HeroInfoSerializer(serializers.Serializer):
