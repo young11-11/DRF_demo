@@ -4,51 +4,38 @@ from django.http import JsonResponse, HttpResponse
 from django.views import View
 
 from booktest.models import BookInfo
+from booktest.serializers import BookInfoSerializer
 
 
 class BookListView(View):
     '''获取'''
 
     def get(self, request):
-
         # 1.获取所有图书
         books = BookInfo.objects.all()
 
         # 整理格式
-        book_li = []
-        for book in books:
-            book_li.append({
-                "id": book.id,
-                "btitle": book.btitle,
-                "bpub_date": book.bpub_date,
-                "bread": book.bread,
-                "bcomment": book.bcomment})
+        serializer = BookInfoSerializer(books,many=True)
 
         # 返回
-        return JsonResponse(book_li, safe=False)
+        return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
         '''增加'''
-        # 接收参数
+        # 接收参数 dict格式
         json_dict = json.loads(request.body.decode())
-        btitle = json_dict.get("btitle")
-        bpub_date = json_dict.get("bpub_date")
 
-        # 校验
+        # 反序列化
+        serializer = BookInfoSerializer(data=json_dict)
+
+        # 校验参数
+        serializer.is_valid(raise_exception=True)
 
         # 保存到数据库
-        book = BookInfo.objects.create(btitle=btitle, bpub_date=bpub_date)
-
-        # 整理格式
-        book_dict = {
-            "id": book.id,
-            "btitle": book.btitle,
-            "bpub_date": book.bpub_date,
-            "bread": book.bread,
-            "bcomment": book.bcomment}
+        serializer.save()
 
         # 返回
-        return JsonResponse(book_dict, status=200)
+        return JsonResponse(serializer.data, status=201)
 
 
 class BookDetailView(View):
@@ -61,15 +48,10 @@ class BookDetailView(View):
         except Exception as e:
             return JsonResponse({'detail': 'not found'}, status=404)
 
-        # 整理格式
-        book_dict = {
-            'id': book.id,
-            'btitle': book.btitle,
-            'bpub_date': book.bpub_date,
-            'bread': book.bread,
-            'bcomment': book.bcomment}
+        # 序列化成字典
+        serializer = BookInfoSerializer(book)
 
-        return JsonResponse(book_dict)
+        return JsonResponse(serializer.data)
 
     def put(self, request, pk):
         '''修改'''
@@ -82,29 +64,16 @@ class BookDetailView(View):
 
         # 得到数据后修改数据
         json_dict = json.loads(request.body.decode())
-        btitle = json_dict.get("btitle")
-        bpub_date = json_dict.get("bpub_date")
 
-        book.btitle = btitle
-        book.bpub_date = bpub_date
-        book.save()
+        serializer = BookInfoSerializer(data=json_dict)
+        serializer.is_valid(raise_exception=True)
 
-        # 保存到数据库
-        # BookInfo.objects.create(btitle=btitle,
-        #                         bpub_date=bpub_date)
-
-        # 整理格式
-        book_dict = {
-            'id': book.id,
-            'btitle': book.btitle,
-            'bpub_date': book.bpub_date,
-            'bread': book.bread,
-            'bcomment': book.bcomment}
-
-        return JsonResponse(book_dict)
+        # 反序列化-数据保存
+        serializer.save()  # save内部调用序列化器类中的update方法
+        return JsonResponse(serializer.data)
 
 
-    def delete(self,request,pk):
+    def delete(self, request, pk):
         '''获取要删除的对象'''
         try:
             book = BookInfo.objects.get(pk=pk)
@@ -117,22 +86,3 @@ class BookDetailView(View):
 
         # ③ 返回响应
         return HttpResponse(status=204)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
