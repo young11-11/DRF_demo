@@ -31,15 +31,28 @@ class UserSerializer(serializers.Serializer):
 
 
 if __name__ == '__main__':
-    # 查询获取图书对象
-    book = BookInfo.objects.get(id=2)
 
-    # 创建序列化对象
-    serializer = BookInfoSerializer(book)
+    data = {"btitle": "python", "bpub_date": "2019-01-29"}
 
-    # 获取序列化之后的数据
-    res = serializer.data
+    serializer = BookInfoSerializer(data=data)
 
-    # 数据格式化显示
-    res = json.dumps(res, indent=1, ensure_ascii=False)
-    print(res)
+    res = serializer.is_valid()
+
+    if res:
+        print(serializer.validated_data)
+    else:
+        print(serializer.errors)
+
+
+    # # 查询获取图书对象
+    # book = BookInfo.objects.get(id=2)
+    #
+    # # 创建序列化对象
+    # serializer = BookInfoSerializer(book)
+    #
+    # # 获取序列化之后的数据
+    # res = serializer.data
+    #
+    # # 数据格式化显示
+    # res = json.dumps(res, indent=1, ensure_ascii=False)
+    # print(res)
