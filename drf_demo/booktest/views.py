@@ -11,43 +11,78 @@ from booktest.models import BookInfo
 from booktest.serializers import BookInfoSerializer
 
 
-class BookListView(GenericAPIView):
+class MyListModelMixin:
 
-    # 指定视图所使用的序列化器类
-    serializer_class = BookInfoSerializer
-    # 指定试图所使用的查询集
-    queryset = BookInfo.objects.all()
+    def list(self, request, *args, **kwargs):
+        '''获取一组数据的通用代码'''
 
-    '''获取所有图书，增加图书'''
-
-    def get(self, request):
-        # 1.获取所有图书
         queryset = self.get_queryset()
-
-        # 序列化所有数据
         serializer = self.get_serializer(queryset, many=True)
-
-        # 返回
         return Response(serializer.data)
 
-    def post(self, request):
-        '''增加'''
 
-        # 反序列化
+class MyCreateModelMixin:
+
+    def create(self, request, *args, **kwargs):
+        """封装新增一个数据的通用代码"""
+
         serializer = self.get_serializer(data=request.data)
-
-        # 校验参数
         serializer.is_valid(raise_exception=True)
-
-        # 保存到数据库
         serializer.save()
-
-        # 返回
         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class BookDetailView(GenericAPIView):
+class BookListView(MyListModelMixin,
+                   MyCreateModelMixin,
+                   GenericAPIView):
+    # 指定视图所使用的序列化器类
+    serializer_class = BookInfoSerializer
 
+    # 指定试图所使用的查询集
+    queryset = BookInfo.objects.all()
+
+    def get(self, request):
+        # 获取所有图书
+        return self.list(request)
+
+    def post(self, request):
+        '''增加图书'''
+        return self.create(request)
+
+
+class MyRetrieveModelMixin:
+    def retrieve(self, request, *args, **kwargs):
+        """获取指定数据的通用代码"""
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+
+class MyUpdateModelMixin:
+    def update(self, request, *args, **kwargs):
+        """修改指定数据的通用代码"""
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()  # 反序列化-数据保存(save内部会调用序列化器类的update方法)
+        return Response(serializer.data)
+
+
+class MyDestroyModelMixin:
+    def destroy(self, request, *args, **kwargs):
+        """删除指定数据的通用代码"""
+
+        instance = self.get_object()
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class BookDetailView(MyRetrieveModelMixin,
+                     MyUpdateModelMixin,
+                     MyDestroyModelMixin,
+                     GenericAPIView):
     # 指定视图所使用的序列化器类
     serializer_class = BookInfoSerializer
 
@@ -55,36 +90,19 @@ class BookDetailView(GenericAPIView):
     queryset = BookInfo.objects.all()
 
     def get(self, request, pk):
-
-        # 获取一个对象
-        instance = self.get_object()
-
-        # 将图书数据进行序列化
-        serializer = self.get_serializer(instance)
-
-        return Response(serializer.data)
+        '''获取一个对象'''
+        return self.retrieve(request, pk)
 
     def put(self, request, pk):
         '''修改'''
-
-        # 获取一个对象
-        instance = self.get_object()
-
-        # 反序列化-数据校验
-        serializer = self.get_serializer(instance, data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        # 反序列化-数据保存(save内部会调用序列化器类的update方法)
-        serializer.save()
-
-        return Response(serializer.data)
+        return self.update(request, pk)
 
     def delete(self, request, pk):
         '''获取要删除的对象'''
-        instance = self.get_object()
+        return self.destroy(request, pk)
 
-        # 删除指定图书数据
-        instance.delete()
-
-        # 返回响应
-        return Response(status=status.HTTP_204_NO_CONTENT)
+# list：获取一组数据的通用代码
+# create：新增一个数据的通用代码
+# retrieve：检索、获取，获取指定数据的通用代码
+# update：修改指定数据的通用代码
+# destroy：摧毁、删除，删除指定数据的通用代码
