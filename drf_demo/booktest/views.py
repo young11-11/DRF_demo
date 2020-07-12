@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponse, Http404
 from django.views import View
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
+from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from rest_framework import status, viewsets, mixins
@@ -27,7 +28,15 @@ class BookListView(ListAPIView):
     serializer_class = BookInfoSerializer
     queryset = BookInfo.objects.all()
 
-    filter_fields = ('bread', 'btitle','id')
+    # 过滤后端设置
+    filter_fields = ('bread', 'btitle', 'id')
+    # 排序设置
+    filter_backends = [OrderingFilter]
+    # 指定排序字段
+    ordering_fields = ('id', 'bread', 'bpub_date')
+
+
+
 
 # list：获取一组数据的通用代码
 # create：新增一个数据的通用代码
