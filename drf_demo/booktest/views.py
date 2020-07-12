@@ -7,16 +7,20 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from rest_framework import status, viewsets, mixins
-from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
+from rest_framework.generics import GenericAPIView
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
 
+from rest_framework.throttling import AnonRateThrottle
+
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.viewsets import   ReadOnlyModelViewSet
-from rest_framework.viewsets import  ModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import ModelViewSet
 
 from booktest.models import BookInfo
 from booktest.serializers import BookInfoSerializer
-
 
 
 class MyPermission(BasePermission):
@@ -44,6 +48,9 @@ class BookInfoViewSet(ReadOnlyModelViewSet):
 
     # 使用自定义的权限控制类
     permission_classes = [MyPermission]
+
+    # 此时设置当前视图仅针对匿名用户进行限流控制
+    throttle_classes = [AnonRateThrottle]
 
 
 

@@ -143,5 +143,18 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         # 此处设置全局权限控制方式为：仅允许通过认证的用户访问
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+    'DEFAULT_THROTTLE_CLASSES': (
+        # 针对未登录(匿名)用户的限流控制类
+        'rest_framework.throttling.AnonRateThrottle',
+        # 针对登录(认证通过)用户的限流控制类
+        'rest_framework.throttling.UserRateThrottle'
+    ),
+    # 指定限流频次
+    'DEFAULT_THROTTLE_RATES': {
+        # 认证用户的限流频次
+        'user': '5/minute',
+        # 匿名用户的限流频次
+        'anon': '3/minute',
+    },
 }
