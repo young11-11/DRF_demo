@@ -35,7 +35,8 @@ class BookListView(ListAPIView):
     # 指定排序字段
     ordering_fields = ('id', 'bread', 'bpub_date')
 
-
+    # 关闭分页
+    # pagination_class = None
 
 
 # list：获取一组数据的通用代码

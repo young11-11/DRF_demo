@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'booktest.apps.BooktestConfig',
     'rest_framework',
 
-    'django_filters', # 注册应用
+    'django_filters',  # 注册应用
 
 ]
 
@@ -174,5 +174,10 @@ REST_FRAMEWORK = {
     },
     # 过滤后端设置
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+
+    # 设置DRF框架所使用的全局分页类
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    # 指定页容量为2
+    "PAGE_SIZE": 2
 
 }
