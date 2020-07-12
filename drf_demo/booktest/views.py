@@ -5,6 +5,7 @@ from django.views import View
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from rest_framework import status, viewsets, mixins
@@ -24,6 +25,18 @@ from booktest.models import BookInfo
 from booktest.serializers import BookInfoSerializer
 
 
+
+class StandardResultPagination(PageNumberPagination):
+
+    # 指定分页的默认页容量
+    page_size = 3
+    # 获取分页数据时，页容量参数的名称
+    page_size_query_param = 'pagesize'
+    # 指定分页时的最大页容量
+    max_page_size = 5
+
+
+
 class BookListView(ListAPIView):
     serializer_class = BookInfoSerializer
     queryset = BookInfo.objects.all()
@@ -37,6 +50,9 @@ class BookListView(ListAPIView):
 
     # 关闭分页
     # pagination_class = None
+
+    # 指定当前视图所使用的分页类
+    pagination_class = StandardResultPagination
 
 
 # list：获取一组数据的通用代码
