@@ -1,5 +1,4 @@
 # 设置Django运行所依赖的环境变量
-import json
 import os
 
 if not os.environ.get('DJANGO_SETTINGS_MODULE'):
@@ -13,6 +12,7 @@ django.setup()
 from booktest.models import BookInfo, HeroInfo
 from booktest.serializers import BookInfoSerializer, HeroInfoSerializer
 from rest_framework import serializers
+import json
 
 
 class User(object):
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     req_data = {'btitle': 'django_rest', 'bpub_date': '2019-06-01', 'bread': 21, 'bcomment': 20}
 
     # 创建序列化器对象
-    serializer = BookInfoSerializer(book,data=req_data)
+    serializer = BookInfoSerializer(book, data=req_data)
 
     # 数据校验
     serializer.is_valid()
@@ -50,8 +50,6 @@ if __name__ == '__main__':
     res = serializer.data
     res = json.dumps(res, indent=1, ensure_ascii=False)
     print(res)
-
-
 
     # # 查询获取图书对象
     # book = BookInfo.objects.all()
