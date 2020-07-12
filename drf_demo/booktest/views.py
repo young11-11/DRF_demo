@@ -13,13 +13,22 @@ from booktest.serializers import BookInfoSerializer
 
 
 class BookInfoViewSet(ModelViewSet):
-
     # 指定序列化器类
     serializer_class = BookInfoSerializer
     # 指定视图集
     queryset = BookInfo.objects.all()
 
+    def latest(self, request):
+        book = BookInfo.objects.latest('id')
+        serializer = self.get_serializer(book)
+        return Response(serializer.data)
 
+    def read(self, request, pk):
+        book = self.get_object()
+        book.bread = request.data.get('read')
+        book.save()
+        serializer = self.get_serializer(book)
+        return Response(serializer.data)
 
 # list：获取一组数据的通用代码
 # create：新增一个数据的通用代码

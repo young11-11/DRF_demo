@@ -10,5 +10,11 @@ urlpatterns = [
         "get": "retrieve",
         "put": "update",
         "delete": "destroy"
+    })),
+    re_path(r'^books/latest/$', views.BookInfoViewSet.as_view({
+        "get": "latest",
+    })),
+    re_path(r'^books/(?P<pk>\d+)/read/$', views.BookInfoViewSet.as_view({
+        "put": "read",
     }))
 ]
