@@ -3,58 +3,28 @@ import json
 from django.http import JsonResponse, HttpResponse, Http404
 from django.views import View
 from rest_framework.response import Response
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, mixins
 from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
 from booktest.models import BookInfo
 from booktest.serializers import BookInfoSerializer
 
 
-class BookInfoViewSet(viewsets.ViewSet):
+class BookInfoViewSet(mixins.ListModelMixin,
+                      mixins.CreateModelMixin,
+                      mixins.RetrieveModelMixin,
+                      mixins.UpdateModelMixin,
+                      mixins.DestroyModelMixin,
+                      GenericViewSet):
 
-    def list(self, request):
-        books = BookInfo.objects.all()
-        serializer = BookInfoSerializer(books,many=True)
-        return Response(serializer.data)
+    # 指定序列化器类
+    serializer_class = BookInfoSerializer
+    # 指定视图集
+    queryset = BookInfo.objects.all()
 
-    def create(self, request):
-        serializer = BookInfoSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def retrieve(self, request, pk):
-
-        try:
-            book = BookInfo.objects.get(pk=pk)
-        except  BookInfo.DoesNotExist:
-            raise Http404
-
-        serializer = BookInfoSerializer(book)
-        return Response(serializer.data)
-
-    def update(self, request, pk):
-
-        try:
-            book = BookInfo.objects.get(pk=pk)
-        except  BookInfo.DoesNotExist:
-            raise Http404
-
-        serializer = BookInfoSerializer(book, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-    def destroy(self, request, pk):
-        try:
-            book = BookInfo.objects.get(pk=pk)
-        except BookInfo.DoesNotExist:
-            raise Http404
-
-        book.delete()
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # list：获取一组数据的通用代码
 # create：新增一个数据的通用代码
