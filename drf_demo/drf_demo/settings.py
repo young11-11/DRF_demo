@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'booktest.apps.BooktestConfig',
     'rest_framework',
-    # 'booktest',
+
+    'django_filters', # 注册应用
+
 ]
 
 MIDDLEWARE = [
@@ -145,19 +147,19 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
 
-#     'DEFAULT_THROTTLE_CLASSES': (
-#         # 针对未登录(匿名)用户的限流控制类
-#         'rest_framework.throttling.AnonRateThrottle',
-#         # 针对登录(认证通过)用户的限流控制类
-#         'rest_framework.throttling.UserRateThrottle'
-#     ),
-#     # 指定限流频次
-#     'DEFAULT_THROTTLE_RATES': {
-#         # 认证用户的限流频次
-#         'user': '5/minute',
-#         # 匿名用户的限流频次
-#         'anon': '3/minute',
-#     },
+    #     'DEFAULT_THROTTLE_CLASSES': (
+    #         # 针对未登录(匿名)用户的限流控制类
+    #         'rest_framework.throttling.AnonRateThrottle',
+    #         # 针对登录(认证通过)用户的限流控制类
+    #         'rest_framework.throttling.UserRateThrottle'
+    #     ),
+    #     # 指定限流频次
+    #     'DEFAULT_THROTTLE_RATES': {
+    #         # 认证用户的限流频次
+    #         'user': '5/minute',
+    #         # 匿名用户的限流频次
+    #         'anon': '3/minute',
+    #     },
 
     # 针对匿名用户和认证用户进行统一的限流控制
     'DEFAULT_THROTTLE_CLASSES': (
@@ -170,4 +172,7 @@ REST_FRAMEWORK = {
         'upload': '3/minute',
         'contacts': '5/minute'
     },
+    # 过滤后端设置
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+
 }

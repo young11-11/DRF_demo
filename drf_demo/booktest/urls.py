@@ -13,8 +13,11 @@ from django.urls import re_path
 from . import views
 
 urlpatterns = [
+    re_path(r'^books/', views.BookListView.as_view()),
 
 ]
+
+'''
 
 from rest_framework.routers import SimpleRouter, DefaultRouter
 
@@ -31,3 +34,4 @@ urlpatterns += router.urls
 # 测试：打印生成的url配置项
 for url in router.urls:
     print(url)
+'''
