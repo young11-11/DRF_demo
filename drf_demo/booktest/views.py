@@ -50,8 +50,10 @@ class BookInfoViewSet(ReadOnlyModelViewSet):
     permission_classes = [MyPermission]
 
     # 此时设置当前视图仅针对匿名用户进行限流控制
-    throttle_classes = [AnonRateThrottle]
+    # throttle_classes = [AnonRateThrottle]
 
+    # 此处指定当前视图采用contacts限流频次进行限流
+    throttle_scope = 'contacts'
 
 
 # list：获取一组数据的通用代码
