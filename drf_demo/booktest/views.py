@@ -6,18 +6,13 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets, mixins
 from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
 from booktest.models import BookInfo
 from booktest.serializers import BookInfoSerializer
 
 
-class BookInfoViewSet(mixins.ListModelMixin,
-                      mixins.CreateModelMixin,
-                      mixins.RetrieveModelMixin,
-                      mixins.UpdateModelMixin,
-                      mixins.DestroyModelMixin,
-                      GenericViewSet):
+class BookInfoViewSet(ModelViewSet):
 
     # 指定序列化器类
     serializer_class = BookInfoSerializer
