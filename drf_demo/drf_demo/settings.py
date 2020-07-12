@@ -178,6 +178,9 @@ REST_FRAMEWORK = {
     # 设置DRF框架所使用的全局分页类
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     # 指定页容量为2
-    "PAGE_SIZE": 2
+    "PAGE_SIZE": 2,
+
+    # 此处设置使用自定义的异常处理函数
+    'EXCEPTION_HANDLER': 'booktest.utils.exceptions.exception_handler',
 
 }

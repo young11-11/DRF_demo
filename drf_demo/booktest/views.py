@@ -1,5 +1,6 @@
 import json
 
+from django.db import DatabaseError
 from django.http import JsonResponse, HttpResponse, Http404
 from django.views import View
 from rest_framework.authentication import SessionAuthentication
@@ -37,9 +38,13 @@ class StandardResultPagination(PageNumberPagination):
 
 
 
-class BookListView(ListAPIView):
-    serializer_class = BookInfoSerializer
-    queryset = BookInfo.objects.all()
+class BookListView(APIView):
+
+
+    def get(self,request):
+        raise DatabaseError
+
+        return Response({"message":"ok"})
 
     # 过滤后端设置
     filter_fields = ('bread', 'btitle', 'id')
